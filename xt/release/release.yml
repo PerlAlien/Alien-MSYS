@@ -5,6 +5,7 @@ pod_spelling_system:
   stopwords:
     - automake
     - msys
+    - autoconf
 
 pod_coverage:
   # format is "Class#method" or "Class", regex allowed
