@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.02      2013-12-08 16:08:37 -0500
   - documentation
   - msys_run does an exit(non-zero) on child failure
 
