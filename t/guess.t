@@ -19,5 +19,6 @@ diag '';
 diag 'msys_path    = ' . (defined msys_path() ? msys_path() : 'undef');
 diag 'config.guess = ' . $path;
 diag 'guess        = ' . $guess;
+diag 'uname        = ' . msys { `uname -a` };
 diag '';
 diag '';
