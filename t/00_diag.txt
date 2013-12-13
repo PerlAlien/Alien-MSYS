@@ -1,2 +1,6 @@
+Archive::Zip
+File::ShareDir
+FindBin
+HTTP::Tiny
 Module::Build
 Test::More
