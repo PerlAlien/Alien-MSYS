@@ -2,7 +2,7 @@ language: perl
 
 install:
   - cpanm -n Dist::Zilla
-  - dzil authordeps --missing | cpanm -n
+  - dzil authordeps --missing | cpanm -n -v
   - cpanm -n Archive::Zip File::ShareDir HTTP::Tiny
 
 perl:
