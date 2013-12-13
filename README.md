@@ -69,11 +69,6 @@ succeeds.
 
 This function returns the full path to the MSYS bin directory.
 
-# CAVEATS
-
-As mentioned above, this doesn't actually install MSYS yet, so it is of limited
-use.
-
 # AUTHOR
 
 Graham Ollis <plicease@cpan.org>

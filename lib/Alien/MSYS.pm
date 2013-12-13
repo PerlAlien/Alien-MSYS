@@ -122,9 +122,3 @@ sub msys_path ()
 
 1;
 
-=head1 CAVEATS
-
-As mentioned above, this doesn't actually install MSYS yet, so it is of limited
-use.
-
-=cut
