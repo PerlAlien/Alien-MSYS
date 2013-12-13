@@ -18,14 +18,20 @@ From Prompt/Makefile
 
 MSYS provides minimal shell and POSIX tools on Windows to enable autoconf scripts to run.
 This module aims to provide an interface for using MSYS on Windows and act as a no-op on
-Unix like operating systems which already have that capability.
+Unix like operating systems which already have that capability.  If you use this module,
+I recommend that you list this as a prerequisite only during MSWin32 installs.
 
-Unfortunately, as of this writing it is a PITA to download and install MSYS in an easy
-automated way, so this module does not YET attempt that.  It simply looks in obvious
-places for it.  This detection is at present pretty naive, so it is recommended that you
-set PERL\_ALIEN\_MSYS\_BIN environment variable prior to installing or using this module.
+When installing, this distribution looks in the default location for an existing MSYS
+install, which is `C:\MinGW\msys\1.0\bin`, if it cannot find it there, then it will
+download and install MSYS in this distribution's share directory (via [File::ShareDir](https://metacpan.org/pod/File::ShareDir)).
+You can override this logic and specify your own location for MSYS using the 
+PERL\_ALIEN\_MSYS\_BIN environment variable.  This should point to the directory containing
+the MSYS executables:
 
-    C:\> set PERL_ALIEN_MSYS_BIN=C:\msys\bin
+    C:\> set PERL_ALIEN_MSYS_BIN=D:\MinGW\msys\bin
+
+Keep in mind that this environment variable is consulted during both install and at run-time,
+so it is advisable to set this in the System Properties control panel.
 
 # FUNCTIONS
 

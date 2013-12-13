@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - MSYS now downloaded and installed if not found
 
 0.02      2013-12-08 16:08:37 -0500
   - documentation
