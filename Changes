@@ -2,6 +2,9 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.04      2013-12-13 16:39:45 -0500
+  - First CPAN release
+
 0.03      2013-12-13 14:36:20 -0500
   - MSYS now downloaded and installed if not found
 
