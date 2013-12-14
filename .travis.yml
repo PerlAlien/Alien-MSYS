@@ -4,7 +4,7 @@ install:
   - cpanm -n Dist::Zilla
   - dzil authordeps --missing | cpanm -n -v
   - cpanm -n Archive::Zip File::ShareDir HTTP::Tiny
-  - cpanm -n Test::CPAN::Changes Test::EOL Test::Fixme Test::NoTabs Test::Pod:Spelling::CommonMistakes Test::Spelling Test::Strict Test::Version
+  - cpanm -n Test::CPAN::Changes Test::EOL Test::Fixme Test::NoTabs Test::Pod::Spelling::CommonMistakes Test::Spelling Test::Strict Test::Version
 
 perl:
   - "5.8"
