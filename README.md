@@ -1,4 +1,4 @@
-# Alien::MSYS
+# Alien::MSYS [![Build Status](https://secure.travis-ci.org/plicease/Alien-MSYS.png)](http://travis-ci.org/plicease/Alien-MSYS)
 
 Tools required for automake scripts in Windows
 
