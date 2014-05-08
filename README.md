@@ -27,8 +27,8 @@ methods in this order:
 
 - environment variable `PERL_ALIEN_MSYS_BIN`
 
-    If set, this environment variable should be set to the root of `MSYS` (NOT MinGW).
-    For example, if you have `MinGW` / `MSYS` intalled on `D:` you might use this:
+    If set, this environment variable should be set to the root of `MSYS` (NOT `MinGW`).
+    For example, if you have `MinGW` / `MSYS` installed on `D:` you might use this:
 
         C:\> set PERL_ALIEN_MSYS_BIN=D:\MinGW\msys\1.0\bin
 
@@ -48,7 +48,7 @@ methods in this order:
 
 - Use desktop shortcut for `MinGW Installer`
 
-    Usually when you install the MinGW installer it creates a shortcut on the desktop.
+    Usually when you install the `MinGW` installer it creates a shortcut on the desktop.
     if [Win32::Shortcut](https://metacpan.org/pod/Win32::Shortcut) is installed (it is an optional dependency), then [Alien::MSYS](https://metacpan.org/pod/Alien::MSYS)
     can use that information to determine the location of `MSYS`.
 
