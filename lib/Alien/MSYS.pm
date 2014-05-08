@@ -39,8 +39,8 @@ methods in this order:
 
 =item environment variable C<PERL_ALIEN_MSYS_BIN>
 
-If set, this environment variable should be set to the root of C<MSYS> (NOT MinGW).
-For example, if you have C<MinGW> / C<MSYS> intalled on C<D:> you might use this:
+If set, this environment variable should be set to the root of C<MSYS> (NOT C<MinGW>).
+For example, if you have C<MinGW> / C<MSYS> installed on C<D:> you might use this:
 
  C:\> set PERL_ALIEN_MSYS_BIN=D:\MinGW\msys\1.0\bin
 
@@ -60,7 +60,7 @@ even if it isn't found by another method.
 
 =item Use desktop shortcut for C<MinGW Installer>
 
-Usually when you install the MinGW installer it creates a shortcut on the desktop.
+Usually when you install the C<MinGW> installer it creates a shortcut on the desktop.
 if L<Win32::Shortcut> is installed (it is an optional dependency), then L<Alien::MSYS>
 can use that information to determine the location of C<MSYS>.
 
