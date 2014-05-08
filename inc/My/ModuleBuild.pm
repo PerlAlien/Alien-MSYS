@@ -1,4 +1,4 @@
-package Alien::MSYS::ModuleBuild;
+package My::ModuleBuild;
 
 use strict;
 use warnings;
