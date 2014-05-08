@@ -1,6 +1,9 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - documentation tweaks
+  - search PATH for mingw-setup.exe as a method
+    for discovering the msys root
 
 0.04      2013-12-13 16:39:45 -0500
   - First CPAN release

@@ -13,7 +13,16 @@ sub ACTION_build
 {
   my $self = shift;
 
-  return $self->SUPER::ACTION_build(@_) if $^O ne 'MSWin32' || $ENV{PERL_ALIEN_MSYS_BIN} || -d 'C:/MinGW/msys/1.0/bin';
+  return $self->SUPER::ACTION_build(@_)
+    if $^O ne 'MSWin32' || do {
+      require lib;
+      lib->import('lib');
+      require Alien::MSYS;
+      defined Alien::MSYS::msys_path();
+    };
+
+  return $self->SUPER::ACTION_build(@_)
+    if $^O ne 'MSWin32' || $ENV{PERL_ALIEN_MSYS_BIN} || -d 'C:/MinGW/msys/1.0/bin';
 
   require HTTP::Tiny;
   my $http = HTTP::Tiny->new;

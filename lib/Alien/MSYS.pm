@@ -109,11 +109,18 @@ sub msys_path ()
   return undef unless  $^O eq 'MSWin32';
   return $ENV{PERL_ALIEN_MSYS_BIN} if defined $ENV{PERL_ALIEN_MSYS_BIN};
   
+  require File::Spec;
+  foreach my $dir (split /;/, $ENV{PATH})
+  {
+    return $dir if -x File::Spec->catfile($dir, 'mingw-get.exe');
+  }
+
   foreach my $try (qw( C:\MinGW\msys\1.0\bin ))
   {
     return $try if -d $try;
   }
 
+  # TODO: if they reinstall the Alien::MSYS dist to a different directory, this may break
   my $dir = eval { File::Spec->catdir(dist_dir('Alien-MSYS'), qw( msys 1.0 bin )) };
   return $dir if defined $dir && -d $dir;
 
