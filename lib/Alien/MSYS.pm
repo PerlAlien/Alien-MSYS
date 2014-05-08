@@ -32,17 +32,42 @@ provide an interface for using MSYS on Windows and act as a no-op on Unix like
 operating systems which already have that capability.  If you use this module, I 
 recommend that you list this as a prerequisite only during MSWin32 installs.
 
-When installing, this distribution looks in the default location for an existing MSYS
-install, which is C<C:\MinGW\msys\1.0\bin>, if it cannot find it there, then it will
-download and install MSYS in this distribution's share directory (via L<File::ShareDir>).
-You can override this logic and specify your own location for MSYS using the 
-PERL_ALIEN_MSYS_BIN environment variable.  This should point to the directory containing
-the MSYS executables:
+When installing, this distribution will look for an existing C<MSYS> using the following
+methods in this order:
 
- C:\> set PERL_ALIEN_MSYS_BIN=D:\MinGW\msys\bin
+=over 4
+
+=item environment variable C<PERL_ALIEN_MSYS_BIN>
+
+If set, this environment variable should be set to the root of C<MSYS> (NOT MinGW).
+For example, if you have C<MinGW> / C<MSYS> intalled on C<D:> you might use this:
+
+ C:\> set PERL_ALIEN_MSYS_BIN=D:\MinGW\msys\1.0\bin
 
 Keep in mind that this environment variable is consulted during both install and at run-time,
 so it is advisable to set this in the System Properties control panel.
+
+=item search C<PATH> for C<mingw-get.exe>
+
+First L<Alien::MSYS> searches the C<PATH> environment variable for the C<mingw-get.exe>
+program, which is a common method for installing C<MinGW> and C<MSYS>.  From there
+if it can deduce the location of C<MSYS> it will use that.
+
+=item try C<C:\MinGW\msys\1.0\bin>
+
+This is usually the default location, so L<Alien::MSYS> will try this directory
+even if it isn't found by another method.
+
+=item Use desktop shortcut for C<MinGW Installer>
+
+Usually when you install the MinGW installer it creates a shortcut on the desktop.
+if L<Win32::Shortcut> is installed (it is an optional dependency), then L<Alien::MSYS>
+can use that information to determine the location of C<MSYS>.
+
+=back
+
+If C<MSYS> cannot be found using any of these methods, then it will download and install
+C<MSYS> in this distribution's share directory (via L<File::ShareDir>).
 
 =head1 FUNCTIONS
 
@@ -116,8 +141,7 @@ sub msys_path ()
     my $mingw_get = File::Spec->catfile($dir, 'mingw-get.exe');
     if(-x $mingw_get)
     {
-      print "dir = $dir\n";
-      my($volume, $dirs, $file) = File::Spec->splitpath($mingw_get);
+      my($volume, $dirs) = File::Spec->splitpath($mingw_get);
       my @dirs = File::Spec->splitdir($dirs);
       splice @dirs, -2;
       push @dirs, qw( msys 1.0 bin );
@@ -136,7 +160,7 @@ sub msys_path ()
     my $lnk_name = File::Spec->catfile(File::HomeDir->my_desktop, 'MinGW Installer.lnk');
     my $lnk      = Win32::Shortcut->new;
     $lnk->Load($lnk_name);
-    my($volume, $dirs, $file) = File::Spec->splitpath($lnk->{Path});
+    my($volume, $dirs) = File::Spec->splitpath($lnk->{Path});
     my @dirs = File::Spec->splitdir($dirs);
     splice @dirs, -3;
     push @dirs, qw( msys 1.0 bin );
