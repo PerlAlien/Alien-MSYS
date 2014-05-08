@@ -112,12 +112,35 @@ sub msys_path ()
   require File::Spec;
   foreach my $dir (split /;/, $ENV{PATH})
   {
-    return $dir if -x File::Spec->catfile($dir, 'mingw-get.exe');
+    my $mingw_get = File::Spec->catfile($dir, 'mingw-get.exe');
+    if(-x $mingw_get)
+    {
+      print "dir = $dir\n";
+      my($volume, $dirs, $file) = File::Spec->splitpath($mingw_get);
+      my @dirs = File::Spec->splitdir($dirs);
+      splice @dirs, -2;
+      push @dirs, qw( msys 1.0 bin );
+      my $path = File::Spec->catdir($volume, @dirs);
+      return $path if -x File::Spec->catfile($path, 'sh.exe');
+    }
   }
 
-  foreach my $try (qw( C:\MinGW\msys\1.0\bin ))
+  foreach my $dir (qw( C:\MinGW\msys\1.0\bin ))
   {
-    return $try if -d $try;
+    return $dir if -x File::Spec->catfile($dir, 'sh.exe');
+  }
+  
+  if(eval { require File::HomeDir; require Win32::Shortcut; 1 })
+  {
+    my $lnk_name = File::Spec->catfile(File::HomeDir->my_desktop, 'MinGW Installer.lnk');
+    my $lnk      = Win32::Shortcut->new;
+    $lnk->Load($lnk_name);
+    my($volume, $dirs, $file) = File::Spec->splitpath($lnk->{Path});
+    my @dirs = File::Spec->splitdir($dirs);
+    splice @dirs, -3;
+    push @dirs, qw( msys 1.0 bin );
+    my $path = File::Spec->catdir($volume, @dirs);
+    return $path if -x File::Spec->catfile($path, 'sh.exe');
   }
 
   # TODO: if they reinstall the Alien::MSYS dist to a different directory, this may break
