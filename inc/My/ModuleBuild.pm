@@ -18,6 +18,11 @@ sub ACTION_build
       require lib;
       lib->import('lib');
       require Alien::MSYS;
+      # TODO: this means on a re-install we have to re-download
+      # if it has been a long time since the last version, this may
+      # not be a bad thing.  If we end up having lots of revisions
+      # this could be highly annoying.
+      do { no warnings 'redefine'; *Alien::MSYS::_my_dist_dir = sub {} };
       defined Alien::MSYS::msys_path();
     };
 

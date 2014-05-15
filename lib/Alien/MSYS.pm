@@ -175,11 +175,15 @@ sub msys_path ()
 
   return $path unless $@;
 
-  # TODO: if they reinstall the Alien::MSYS dist to a different directory, this may break
-  my $dir = eval { File::Spec->catdir(dist_dir('Alien-MSYS'), qw( msys 1.0 bin )) };
+  my $dir = _my_dist_dir();
   return $dir if defined $dir && -d $dir;
 
   return undef;
+}
+
+sub _my_dist_dir
+{
+  eval { File::Spec->catdir(dist_dir('Alien-MSYS'), qw( msys 1.0 bin )) };
 }
 
 1;
