@@ -2,9 +2,12 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.07      2014-05-15 09:17:18 -0400
+  - fix reinstall bug (GH#3)
+
 0.06      2014-05-15 04:00:21 -0400
   - Fix build bug where Win32::Shortcut is installed
-    but no desktop icon for the MSYS GUI installer.
+    but no desktop icon for the MSYS GUI installer (GH#3)
 
 0.05      2014-05-08 08:54:54 -0400
   - documentation tweaks
