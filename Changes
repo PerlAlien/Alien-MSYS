@@ -2,6 +2,10 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.06      2014-05-15 04:00:21 -0400
+  - Fix build bug where Win32::Shortcut is installed
+    but no desktop icon for the MSYS GUI installer.
+
 0.05      2014-05-08 08:54:54 -0400
   - documentation tweaks
   - search PATH for mingw-setup.exe as a method
