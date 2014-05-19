@@ -37,20 +37,19 @@ methods in this order:
 
 - search `PATH` for `mingw-get.exe`
 
-    First [Alien::MSYS](https://metacpan.org/pod/Alien::MSYS) searches the `PATH` environment variable for the `mingw-get.exe`
+    Second, [Alien::MSYS](https://metacpan.org/pod/Alien::MSYS) searches the `PATH` environment variable for the `mingw-get.exe`
     program, which is a common method for installing `MinGW` and `MSYS`.  From there
     if it can deduce the location of `MSYS` it will use that.
 
 - try `C:\MinGW\msys\1.0\bin`
 
-    This is usually the default location, so [Alien::MSYS](https://metacpan.org/pod/Alien::MSYS) will try this directory
-    even if it isn't found by another method.
+    Next, [Alien::MSYS](https://metacpan.org/pod/Alien::MSYS) tries the default install location.
 
 - Use desktop shortcut for `MinGW Installer`
 
-    Usually when you install the `MinGW` installer it creates a shortcut on the desktop.
-    if [Win32::Shortcut](https://metacpan.org/pod/Win32::Shortcut) is installed (it is an optional dependency), then [Alien::MSYS](https://metacpan.org/pod/Alien::MSYS)
-    can use that information to determine the location of `MSYS`.
+    Finally, [Alien::MSYS](https://metacpan.org/pod/Alien::MSYS) will try to find `MSYS` from the desktop shortcut created
+    by the GUI installer for `MinGW`.  This method only works if you already have
+    [Win32::Shortcut](https://metacpan.org/pod/Win32::Shortcut) installed, as it is an optional dependency.
 
 If `MSYS` cannot be found using any of these methods, then it will download and install
 `MSYS` in this distribution's share directory (via [File::ShareDir](https://metacpan.org/pod/File::ShareDir)).

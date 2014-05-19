@@ -49,20 +49,19 @@ so it is advisable to set this in the System Properties control panel.
 
 =item search C<PATH> for C<mingw-get.exe>
 
-First L<Alien::MSYS> searches the C<PATH> environment variable for the C<mingw-get.exe>
+Second, L<Alien::MSYS> searches the C<PATH> environment variable for the C<mingw-get.exe>
 program, which is a common method for installing C<MinGW> and C<MSYS>.  From there
 if it can deduce the location of C<MSYS> it will use that.
 
 =item try C<C:\MinGW\msys\1.0\bin>
 
-This is usually the default location, so L<Alien::MSYS> will try this directory
-even if it isn't found by another method.
+Next, L<Alien::MSYS> tries the default install location.
 
 =item Use desktop shortcut for C<MinGW Installer>
 
-Usually when you install the C<MinGW> installer it creates a shortcut on the desktop.
-if L<Win32::Shortcut> is installed (it is an optional dependency), then L<Alien::MSYS>
-can use that information to determine the location of C<MSYS>.
+Finally, L<Alien::MSYS> will try to find C<MSYS> from the desktop shortcut created
+by the GUI installer for C<MinGW>.  This method only works if you already have
+L<Win32::Shortcut> installed, as it is an optional dependency.
 
 =back
 
