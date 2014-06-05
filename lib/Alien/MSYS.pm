@@ -18,7 +18,7 @@ from Perl:
 
  use Alien::MSYS;
  # runs uname from MSYS
- my $uname = mysy { `uname` };
+ my $uname = msys { `uname` };
 
 From Prompt/Makefile
 
