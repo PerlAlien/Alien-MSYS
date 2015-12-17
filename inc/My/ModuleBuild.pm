@@ -66,8 +66,11 @@ sub ACTION_build
       defined Alien::MSYS::msys_path();
     };
 
-  return $self->SUPER::ACTION_build(@_)
-    if $^O ne 'MSWin32' || $ENV{PERL_ALIEN_MSYS_BIN} || -d 'C:/MinGW/msys/1.0/bin';
+  foreach my $try ($ENV{PERL_ALIEN_MSYS_BIN}, 'C:/MinGW/msys/1.0/bin')
+  {
+    my $sh_path = File::Spec->catfile($try, 'sh.exe');
+    return $self->SUPER::ACTION_build(@_) if -x $sh_path;
+  }
 
   my($url, $zipname) = __PACKAGE__->fetch_index2(__PACKAGE__->_fetch_index1);
 

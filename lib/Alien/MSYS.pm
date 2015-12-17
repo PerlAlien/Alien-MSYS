@@ -132,7 +132,8 @@ This function returns the full path to the MSYS bin directory.
 sub msys_path ()
 {
   return undef unless  $^O eq 'MSWin32';
-  return $ENV{PERL_ALIEN_MSYS_BIN} if defined $ENV{PERL_ALIEN_MSYS_BIN};
+  return $ENV{PERL_ALIEN_MSYS_BIN}
+    if defined $ENV{PERL_ALIEN_MSYS_BIN} && -x File::Spec->catfile($$ENV{PERL_ALIEN_MSYS_BIN}, 'sh.exe');
   
   require File::Spec;
   foreach my $dir (split /;/, $ENV{PATH})
