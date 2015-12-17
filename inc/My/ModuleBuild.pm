@@ -8,6 +8,7 @@ use File::Spec;
 use Env qw( @PATH );
 use FindBin ();
 use File::Temp qw( tempdir );
+use Cwd qw( cwd );
 
 sub _fetch_index1
 {
@@ -83,6 +84,7 @@ sub ACTION_build
   my $dir = File::Spec->catdir($FindBin::Bin, qw( share ));
   mkpath($dir, 1, 0755);
   
+  my $save = cwd();
   chdir $dir;
   
   my $zip = Archive::Zip->new;
@@ -106,17 +108,12 @@ sub ACTION_build
   }
   closedir $dh;
   
-  _cdup();
+  chdir $save;
 
   push @PATH, File::Spec->catdir($dir, qw( bin ));
   system 'mingw-get', 'install', 'msys';
 
   $self->SUPER::ACTION_build(@_);
-}
-
-sub _cdup
-{
-  chdir(File::Spec->updir);
 }
 
 1;
