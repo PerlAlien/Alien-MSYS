@@ -8,7 +8,7 @@ from Perl:
 
     use Alien::MSYS;
     # runs uname from MSYS
-    my $uname = mysy { `uname` };
+    my $uname = msys { `uname` };
 
 From Prompt/Makefile
 
@@ -92,7 +92,7 @@ This function returns the full path to the MSYS bin directory.
 
 # AUTHOR
 
-Graham Ollis <plicease@cpan.org>
+Graham Ollis &lt;plicease@cpan.org>
 
 # COPYRIGHT AND LICENSE
 

@@ -2,10 +2,9 @@ language: perl
 sudo: false
 
 install:
-  - cpanm -n Dist::Zilla
+  - perlbrew list
   - dzil authordeps --missing | cpanm -n
-  - cpanm -n Archive::Zip File::ShareDir HTTP::Tiny
-  - cpanm -n Test::CPAN::Changes Test::EOL Test::Fixme Test::NoTabs Test::Pod::Spelling::CommonMistakes Test::Spelling Test::Strict Test::Version || true
+  - dzil listdeps --missing | cpanm -n
 
 perl:
   - "5.8"
@@ -17,4 +16,5 @@ perl:
   - "5.20"
   - "5.22"
 
-script: dzil test -v
+script:
+  - dzip test -v

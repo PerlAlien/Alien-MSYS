@@ -9,6 +9,46 @@ use Env qw( @PATH );
 use FindBin ();
 use File::Temp qw( tempdir );
 
+sub _fetch_index1
+{
+  require HTTP::Tiny;  
+  my $url = 'http://sourceforge.net/projects/mingw/files/Installer/mingw-get/';
+  my $index = HTTP::Tiny->new->get($url);
+  
+  $index->{status} =~ /^2..$/ || die join(' ', $index->{status}, $index->{reason}, $url);
+  
+  my $link;
+  
+  for($index->{content} =~ m{"/(projects/mingw/files/Installer/mingw-get/mingw-get-.*?-(\d\d\d\d\d\d\d\d)-(\d+))/"})
+  {
+    if(!defined $link || ($link->{date} <= $2 && $link->{num} < $3))
+    {
+      $link = {
+        url  => "http://sourceforge.net/$1",
+        date => $2,
+        num  => $3,
+      };
+    }
+  }
+
+  die "couldn't find mingw-get in index" unless $link;
+  $link->{url};
+}
+
+sub _fetch_index2
+{
+  my(undef, $url) = @_;
+  require HTTP::Tiny;  
+  my $index = HTTP::Tiny->new->get($url);
+  
+  $index->{status} =~ /^2..$/ || die join(' ', $index->{status}, $index->{reason}, $url);
+
+  die "couldn't find mingw-get in download index"
+    unless $index->{content} =~ m{"(https?://.*/(mingw-get-.*?-bin.zip)/download)"};
+    
+  ($1, $2);
+}
+
 sub ACTION_build
 {
   my $self = shift;
@@ -29,43 +69,9 @@ sub ACTION_build
   return $self->SUPER::ACTION_build(@_)
     if $^O ne 'MSWin32' || $ENV{PERL_ALIEN_MSYS_BIN} || -d 'C:/MinGW/msys/1.0/bin';
 
-  require HTTP::Tiny;
-  my $http = HTTP::Tiny->new;
-  
-  my $url = 'http://sourceforge.net/projects/mingw/files/Installer/mingw-get/';
-  my $index = $http->get($url);
-  
-  $index->{status} =~ /^2..$/ || die join(' ', $index->{status}, $index->{reason}, $url);
-  
-  my $link;
-  
-  for($index->{content} =~ m{"/(projects/mingw/files/Installer/mingw-get/mingw-get-.*?-(\d\d\d\d\d\d\d\d)-(\d+))/"})
-  {
-    if(!defined $link || ($link->{date} <= $2 && $link->{num} < $3))
-    {
-      $link = {
-        url  => "http://sourceforge.net/$1",
-        date => $2,
-        num  => $2,
-      };
-    }
-  }
+  my($url, $zipname) = __PACKAGE__->fetch_index2(__PACKAGE__->_fetch_index1);
 
-  die "couldn't find mingw-get in index" unless $link;
-
-  $url = $link->{url};
-  $index = $http->get($url);
-  
-  $index->{status} =~ /^2..$/ || die join(' ', $index->{status}, $index->{reason}, $url);
-
-  die "couldn't find mingw-get in download index"
-    unless $index->{content} =~ m{"(https?://.*/(mingw-get-.*?-bin.zip)/download)"};
-    
-  $url = $1;
-  my $zipname = $2;
-  print "url = $url\n";
-  print "zip = $zipname\n";
-  my $download = $http->get($url);
+  my $download = HTTP::Tiny->new->get($url);
 
   $download->{status} =~ /^2..$/ || die join(' ', $download->{status}, $download->{reason}, $url);
 
