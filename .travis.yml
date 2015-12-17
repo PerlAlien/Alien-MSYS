@@ -17,4 +17,4 @@ perl:
   - "5.22"
 
 script:
-  - dzip test -v
+  - dzil test -v
