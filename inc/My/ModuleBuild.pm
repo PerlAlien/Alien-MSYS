@@ -50,6 +50,14 @@ sub _fetch_index2
   ($1, $2);
 }
 
+sub _fetch_zip
+{
+  my(undef, $url) = @_;
+  my $download = HTTP::Tiny->new->get($url);
+  $download->{status} =~ /^2..$/ || die join(' ', $download->{status}, $download->{reason}, $url);
+  $download->{content};
+}
+
 sub ACTION_build
 {
   my $self = shift;
@@ -73,11 +81,8 @@ sub ACTION_build
     return $self->SUPER::ACTION_build(@_) if -x $sh_path;
   }
 
-  my($url, $zipname) = __PACKAGE__->fetch_index2(__PACKAGE__->_fetch_index1);
-
-  my $download = HTTP::Tiny->new->get($url);
-
-  $download->{status} =~ /^2..$/ || die join(' ', $download->{status}, $download->{reason}, $url);
+  my($url, $zipname) = __PACKAGE__->_fetch_index2(__PACKAGE__->_fetch_index1);
+  my $zipcontent = __PACKAGE__->_fetch_zip($url);
 
   require Archive::Zip;
   
@@ -92,7 +97,7 @@ sub ACTION_build
     my $fn = File::Spec->catdir(tempdir(CLEANUP => 0), $zipname);
     open my $fh, '>', $fn;
     binmode $fh;
-    print $fh $download->{content};
+    print $fh $zipcontent;
     close $fh;
     print "fn = $fn\n";
     $fn;
