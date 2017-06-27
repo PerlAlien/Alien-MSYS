@@ -25,6 +25,11 @@ recommend that you list this as a prerequisite only during MSWin32 installs.
 When installing, this distribution will look for an existing `MSYS` using the following
 methods in this order:
 
+- environment variable `ALIEN_INSTALL_TYPE` or `ALIEN_MSYS_INSTALL_TYPE`
+
+    If set to `share` a system install will not be attempted.  If set to `system`
+    then a share install will not be attempted.
+
 - environment variable `PERL_ALIEN_MSYS_BIN`
 
     If set, this environment variable should be set to the root of `MSYS` (NOT `MinGW`).

@@ -62,23 +62,36 @@ sub ACTION_build
 {
   my $self = shift;
 
-  return $self->SUPER::ACTION_build(@_)
-    if $^O ne 'MSWin32' || do {
-      require lib;
-      lib->import('lib');
-      require Alien::MSYS;
-      # TODO: this means on a re-install we have to re-download
-      # if it has been a long time since the last version, this may
-      # not be a bad thing.  If we end up having lots of revisions
-      # this could be highly annoying.
-      do { no warnings 'redefine'; *Alien::MSYS::_my_dist_dir = sub {} };
-      defined Alien::MSYS::msys_path();
-    };
+  my $override_type = $ENV{ALIEN_MSYS_INSTALL_TYPE} || $ENV{ALIEN_INSTALL_TYPE} || '';
 
-  foreach my $try ($ENV{PERL_ALIEN_MSYS_BIN}, 'C:/MinGW/msys/1.0/bin')
+  return $self->SUPER::ACTION_build(@_)
+    if $^O ne 'MSWin32';
+
+  if($override_type ne 'share')
   {
-    my $sh_path = File::Spec->catfile($try, 'sh.exe');
-    return $self->SUPER::ACTION_build(@_) if -x $sh_path;
+    return $self->SUPER::ACTION_build(@_)
+      if do {
+        require lib;
+        lib->import('lib');
+        require Alien::MSYS;
+        # TODO: this means on a re-install we have to re-download
+        # if it has been a long time since the last version, this may
+        # not be a bad thing.  If we end up having lots of revisions
+        # this could be highly annoying.
+        do { no warnings 'redefine'; *Alien::MSYS::_my_dist_dir = sub {} };
+        defined Alien::MSYS::msys_path();
+      };
+
+    foreach my $try ($ENV{PERL_ALIEN_MSYS_BIN}, 'C:/MinGW/msys/1.0/bin')
+    {
+      my $sh_path = File::Spec->catfile($try, 'sh.exe');
+      return $self->SUPER::ACTION_build(@_) if -x $sh_path;
+    }
+  }
+
+  if($override_type eq 'system')
+  {
+    die "requested a system install, but could not be found!";
   }
 
   my($url, $zipname) = __PACKAGE__->_fetch_index2(__PACKAGE__->_fetch_index1);

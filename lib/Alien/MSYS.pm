@@ -37,6 +37,11 @@ methods in this order:
 
 =over 4
 
+=item environment variable C<ALIEN_INSTALL_TYPE> or C<ALIEN_MSYS_INSTALL_TYPE>
+
+If set to C<share> a system install will not be attempted.  If set to C<system>
+then a share install will not be attempted.
+
 =item environment variable C<PERL_ALIEN_MSYS_BIN>
 
 If set, this environment variable should be set to the root of C<MSYS> (NOT C<MinGW>).
@@ -132,51 +137,60 @@ This function returns the full path to the MSYS bin directory.
 sub msys_path ()
 {
   return undef unless  $^O eq 'MSWin32';
-  return $ENV{PERL_ALIEN_MSYS_BIN}
-    if defined $ENV{PERL_ALIEN_MSYS_BIN} && -x File::Spec->catfile($$ENV{PERL_ALIEN_MSYS_BIN}, 'sh.exe');
   
-  require File::Spec;
-  foreach my $dir (split /;/, $ENV{PATH})
+  my $override_type = $ENV{ALIEN_MSYS_INSTALL_TYPE} || $ENV{ALIEN_INSTALL_TYPE} || '';
+  
+  if($override_type ne 'share')
   {
+    return $ENV{PERL_ALIEN_MSYS_BIN}
+      if defined $ENV{PERL_ALIEN_MSYS_BIN} && -x File::Spec->catfile($$ENV{PERL_ALIEN_MSYS_BIN}, 'sh.exe');
+  
+    require File::Spec;
+    foreach my $dir (split /;/, $ENV{PATH})
+    {
+      my $path = eval {
+        my $mingw_get = File::Spec->catfile($dir, 'mingw-get.exe');
+        die 'no mingw-get.exe' unless -x $mingw_get;
+        my($volume, $dirs) = File::Spec->splitpath($mingw_get);
+        my @dirs = File::Spec->splitdir($dirs);
+        splice @dirs, -2;
+        push @dirs, qw( msys 1.0 bin );
+        my $path = File::Spec->catdir($volume, @dirs);
+        die 'no sh.exe' unless -x File::Spec->catfile($path, 'sh.exe');
+        $path;
+      };
+      return $path unless $@;
+    }
+
+    foreach my $dir (qw( C:\MinGW\msys\1.0\bin ))
+    {
+      return $dir if -x File::Spec->catfile($dir, 'sh.exe');
+    }
+
     my $path = eval {
-      my $mingw_get = File::Spec->catfile($dir, 'mingw-get.exe');
-      die 'no mingw-get.exe' unless -x $mingw_get;
-      my($volume, $dirs) = File::Spec->splitpath($mingw_get);
+      require File::HomeDir;
+      require Win32::Shortcut;
+      my $lnk_name = File::Spec->catfile(File::HomeDir->my_desktop, 'MinGW Installer.lnk');
+      die "No MinGW Installer.lnk" unless -r $lnk_name;
+      my $lnk      = Win32::Shortcut->new;
+      $lnk->Load($lnk_name);
+      my($volume, $dirs) = File::Spec->splitpath($lnk->{Path});
       my @dirs = File::Spec->splitdir($dirs);
-      splice @dirs, -2;
+      splice @dirs, -3;
       push @dirs, qw( msys 1.0 bin );
       my $path = File::Spec->catdir($volume, @dirs);
       die 'no sh.exe' unless -x File::Spec->catfile($path, 'sh.exe');
       $path;
     };
+
     return $path unless $@;
   }
 
-  foreach my $dir (qw( C:\MinGW\msys\1.0\bin ))
+  if($override_type ne 'system')
   {
-    return $dir if -x File::Spec->catfile($dir, 'sh.exe');
+    my $dir = _my_dist_dir();
+    return $dir if defined $dir && -d $dir;
   }
-
-  my $path = eval {
-    require File::HomeDir;
-    require Win32::Shortcut;
-    my $lnk_name = File::Spec->catfile(File::HomeDir->my_desktop, 'MinGW Installer.lnk');
-    die "No MinGW Installer.lnk" unless -r $lnk_name;
-    my $lnk      = Win32::Shortcut->new;
-    $lnk->Load($lnk_name);
-    my($volume, $dirs) = File::Spec->splitpath($lnk->{Path});
-    my @dirs = File::Spec->splitdir($dirs);
-    splice @dirs, -3;
-    push @dirs, qw( msys 1.0 bin );
-    my $path = File::Spec->catdir($volume, @dirs);
-    die 'no sh.exe' unless -x File::Spec->catfile($path, 'sh.exe');
-    $path;
-  };
-
-  return $path unless $@;
-
-  my $dir = _my_dist_dir();
-  return $dir if defined $dir && -d $dir;
 
   return undef;
 }
