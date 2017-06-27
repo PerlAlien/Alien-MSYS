@@ -117,6 +117,16 @@ sub ACTION_build
 
   push @PATH, File::Spec->catdir($dir, qw( bin ));
   system 'mingw-get', 'install', 'msys';
+  
+  # A lot of tools also need m4
+  system 'mingw-get', 'install', 'msys-m4';
+  
+  # A number of autotools (autoconf, automake) are
+  # implemented in Perl, but when you build them
+  # with Perl on windows using MSYS, they use MSYS
+  # paths, like /c/ instead of c:/, so yes.  we
+  # also need MSYS Perl.  *sigh*
+  system 'mingw-get', 'install', 'msys-perl';
 
   $self->SUPER::ACTION_build(@_);
 }
