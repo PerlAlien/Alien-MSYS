@@ -168,9 +168,9 @@ sub msys_path ()
     }
 
     my $path = eval {
-      require File::HomeDir;
+      require Win32;
       require Win32::Shortcut;
-      my $lnk_name = File::Spec->catfile(File::HomeDir->my_desktop, 'MinGW Installer.lnk');
+      my $lnk_name = File::Spec->catfile(Win32::GetFolderPath(Win32::CSIDL_DESKTOP(), 1), 'MinGW Installer.lnk');
       die "No MinGW Installer.lnk" unless -r $lnk_name;
       my $lnk      = Win32::Shortcut->new;
       $lnk->Load($lnk_name);

@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Remove dependency on File::HomeDir
 
 0.08      2017-06-27 05:02:40 -0400
   - Add environment override ALIEN_MSYS_INSTALL_TYPE, ALIEN_INSTALL_TYPE
