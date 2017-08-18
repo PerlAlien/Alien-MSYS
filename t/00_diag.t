@@ -1,7 +1,7 @@
-use strict;
-use warnings;
+use Test2::V0 -no_srand => 1;
 use Config;
-use Test::More tests => 1;
+
+eval q{ require Test::More };
 
 # This .t file is generated.
 # make changes instead to dist.ini
@@ -10,11 +10,13 @@ my %modules;
 my $post_diag;
 
 $modules{$_} = $_ for qw(
-  Archive::Zip
-  File::ShareDir
-  HTTP::Tiny
-  Module::Build
-  Test::More
+  Alien::Build
+  Alien::Build::MM
+  Alien::Build::Plugin::Decode::SourceForge
+  ExtUtils::MakeMaker
+  Path::Tiny
+  Test2::V0
+  Test::Alien::Build
   Win32::Shortcut
 );
 
@@ -62,7 +64,7 @@ if(@keys > 0)
 
 diag sprintf $format, 'perl ', $];
 
-foreach my $module (@modules)
+foreach my $module (sort @modules)
 {
   if(eval qq{ require $module; 1 })
   {
@@ -84,3 +86,4 @@ if($post_diag)
 
 spacer;
 
+done_testing;

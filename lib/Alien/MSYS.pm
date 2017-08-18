@@ -3,7 +3,6 @@ package Alien::MSYS;
 use strict;
 use warnings;
 use base qw( Exporter );
-use File::ShareDir qw( dist_dir );
 use File::Spec;
 
 our @EXPORT    = qw( msys msys_run );
@@ -143,7 +142,7 @@ sub msys_path ()
   if($override_type ne 'share')
   {
     return $ENV{PERL_ALIEN_MSYS_BIN}
-      if defined $ENV{PERL_ALIEN_MSYS_BIN} && -x File::Spec->catfile($$ENV{PERL_ALIEN_MSYS_BIN}, 'sh.exe');
+      if defined $ENV{PERL_ALIEN_MSYS_BIN} && -x File::Spec->catfile($ENV{PERL_ALIEN_MSYS_BIN}, 'sh.exe');
   
     require File::Spec;
     foreach my $dir (split /;/, $ENV{PATH})
@@ -197,7 +196,22 @@ sub msys_path ()
 
 sub _my_dist_dir
 {
-  eval { File::Spec->catdir(dist_dir('Alien-MSYS'), qw( msys 1.0 bin )) };
+  #eval { File::Spec->catdir(dist_dir('Alien-MSYS'), qw( msys 1.0 bin )) };
+  my @pm = ('Alien', 'MSYS.pm');
+  foreach my $inc (@INC)
+  {
+    my $pm = File::Spec->catfile($inc, @pm);
+    if(-f $pm)
+    {
+      my $share = File::Spec->catdir($inc, qw( auto share dist ), 'Alien-MSYS' );
+      if(-d $share)
+      {
+        return File::Spec->catdir($share, qw( msys 1.0 bin) );
+      }
+      last;
+    }
+  }
+  return;
 }
 
 1;

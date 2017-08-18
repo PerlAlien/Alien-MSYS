@@ -1,8 +1,35 @@
 use alienfile;
 
+configure { requires 'Alien::Build' => '0.99' };
+
 probe sub {
-  if($^O =~ /^(MSWin32|cygwin)$/)
+  if($^O eq 'MSWin32' || $ENV{PERL_ALIEN_MSYS_FAUX})
   {
+    return 'share'
+      if defined $ENV{ALIEN_MSYS_INSTALL_TYPE} && $ENV{ALIEN_MSYS_INSTALL_TYPE} eq 'share';
+  
+    if(-f 'lib/Alien/MSYS.pm')
+    {
+      eval { require './lib/Alien/MSYS.pm' };
+    }
+    else
+    {
+      eval { require Alien::MSYS };
+    }
+    if(my $error = $@)
+    {
+      log("error loading Alien::MSYS: $error");
+    }
+    else
+    {
+      do { no warnings 'redefine'; *Alien::MSYS::_my_dist_dir = sub {} };
+      if(defined Alien::MSYS::msys_path())
+      {
+        return 'system';
+      }
+    }
+    die "requested a system install, but could not be found!"
+      if defined $ENV{ALIEN_MSYS_INSTALL_TYPE} && $ENV{ALIEN_MSYS_INSTALL_TYPE} eq 'system';
     return 'share';
   }
   else
