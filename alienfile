@@ -1,7 +1,7 @@
 use alienfile;
 
 probe sub {
-  if($^O eq 'MSWin32')
+  if($^O =~ /^(MSWin32|cygwin)$/)
   {
     return 'share';
   }
@@ -23,6 +23,8 @@ share {
 
   download sub {
     my($build) = @_;
+
+    $build->log("GET @{[ meta->prop->{start_url} ]}");
     
     my $mingw_get_index_url = do {
       my $ret = $build->decode($build->fetch);
@@ -31,7 +33,7 @@ share {
       $first->{url};
     };
     
-    $build->log($mingw_get_index_url);
+    $build->log("GET $mingw_get_index_url");
     
     my $mingw_get_url = do {
       my $ret = $build->decode($build->fetch($mingw_get_index_url));
@@ -39,7 +41,7 @@ share {
       $first->{url};
     };
     
-    $build->log($mingw_get_url);
+    $build->log("GET $mingw_get_url");
     
     do {
       my $ret = $build->fetch($mingw_get_url);
@@ -69,5 +71,46 @@ share {
     };
 
   };
+
+  meta->around_hook(
+    build => sub {
+      my $orig = shift;
+    
+      use Env qw( @PATH );
+      local $ENV{PATH} = $ENV{PATH};
+      unshift @PATH, Path::Tiny->new('./bin')->absolute->stringify;
+
+      foreach my $dll (grep { $_->basename =~ /\.dll$/ } Path::Tiny->new('libexec/mingw-get')->children)
+      {
+        eval { chmod 0755, $dll };
+      }
+
+      $orig->(@_);
+    },
+  );
+
+  build [
+    'mingw-get install msys',
+    'mingw-get install msys-m4',
+    'mingw-get install msys-perl',
+    sub {
+      my($build) = @_;
+      my $move = 'move';
+
+      if($^O eq 'cygwin')
+      {
+        $build->system('mv * %{.install.stage}');
+      }
+      elsif($^O eq 'MSWin32')
+      {
+        my $stage = File::Spec->catdir($build->install_prop->{stage});
+        $build->system("xcopy . $stage /E");
+      }
+      else
+      {
+        die "huh?";
+      }
+    },
+  ];
 
 };
