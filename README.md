@@ -110,7 +110,7 @@ can do to avoid this painful cost:
 
 - Pre-install MSYS
 
-    As mentioned above if you preinstall MSYS and set thet `PERL_ALIEN_MSYS_BIN`
+    As mentioned above if you preinstall MSYS and set the `PERL_ALIEN_MSYS_BIN`
     environment variable, then you will save yourself some time if you use multiple
     installs of Perl like I do.
 
