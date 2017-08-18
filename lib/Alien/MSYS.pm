@@ -202,3 +202,56 @@ sub _my_dist_dir
 
 1;
 
+=head1 CAVEATS
+
+This L<Alien> is big and slow to install.  I am aware this is an annoying problem.
+It is also the only reliable way (that I know of) to install packages from source 
+that use autotools on Strawberry or Visual C++ Perl.  Here are some things that you
+can do to avoid this painful cost:
+
+=over 4
+
+=item Use the system library if possible
+
+The L<Alien::Build> system is usually smart enough to find the system library
+if it is available.  L<Alien::MSYS> is usually only necessary for so called
+C<share> installs.
+
+=item Pre-install MSYS
+
+As mentioned above if you preinstall MSYS and set thet C<PERL_ALIEN_MSYS_BIN>
+environment variable, then you will save yourself some time if you use multiple
+installs of Perl like I do.
+
+=item Use another build system
+
+Some projects will provide a makefile that will work with GNU Make and C<cmd.exe>
+that you can build without MSYS.  An example of an Alien that takes advantage of
+this is L<Alien::libuv>.
+
+Some projects provide both autoconf and CMake.  Although using CMake reliably 
+requires L<Alien::cmake3> for C<share> installs, it is much much lighter than L<Alien::MSYS>.
+
+Also obviously you can open a ticket, or make a pull request with the project that you
+are alienizing to support build systems that don't suck as much as autoconf.
+
+=item Use MSYS2
+
+Strawberry Perl is convenient for building XS modules without any dependencies
+or just dependencies on the small number of libraries that come bundled with
+Strawberry Perl.  It is very very painful in my opinion if you depend on libraries
+that are not bundled, which is why this Alien exists.  There is an alternative though.
+
+MSYS2 / MinGW provides a MSWin32 Perl as part of a Linux / open source like package
+that provides probably all of the libraries that you might want to use as dependencies,
+and if it doesn't you can build much easier than with Strawberry + Alien::MSYS.
+
+There are some notes here:
+
+L<https://project-renard.github.io/doc/development/meeting-log/posts/2016/05/03/windows-build-with-msys2/>
+
+On using the MSYS2 / MinGW / MSWin32 Perl from the MSYS2 project.
+
+=back
+
+=cut
