@@ -1,0 +1,73 @@
+use alienfile;
+
+probe sub {
+  if($^O eq 'MSWin32')
+  {
+    return 'share';
+  }
+  else
+  {
+    return 'system';
+  }
+};
+
+share {
+
+  meta->prop->{start_url} = 'https://sourceforge.net/projects/mingw/files/Installer/mingw-get/';
+
+  requires 'Path::Tiny';
+  plugin 'Fetch::HTTPTiny';
+  plugin 'Decode::HTML';
+  plugin 'Decode::SourceForge';
+  plugin 'Extract' => 'zip';
+
+  download sub {
+    my($build) = @_;
+    
+    my $mingw_get_index_url = do {
+      my $ret = $build->decode($build->fetch);
+      my($first) = grep { $_->{filename} =~ /mingw-get-.*?-([0-9]{8})-([0-9]+)/ } @{ $ret->{list} };
+      die 'unable to find the correct directory for mingw-get' unless $first;
+      $first->{url};
+    };
+    
+    $build->log($mingw_get_index_url);
+    
+    my $mingw_get_url = do {
+      my $ret = $build->decode($build->fetch($mingw_get_index_url));
+      my($first) = grep { $_->{filename} =~ /mingw-get-.*?-bin.zip/ } @{ $ret->{list} };
+      $first->{url};
+    };
+    
+    $build->log($mingw_get_url);
+    
+    do {
+      my $ret = $build->fetch($mingw_get_url);
+      
+      if(defined $ret->{content})
+      {
+        Path::Tiny->new($ret->{filename})->spew_raw($ret->{content});
+      }
+      elsif(defined $ret->{path})
+      {
+        my $from = Path::Tiny->new($ret->{path});
+        my $to   = $ret->{filename};
+        if($ret->{tmp})
+        {
+          $from->move($to);
+        }
+        else
+        {
+          $from->copy($to);
+        }
+      }
+      else
+      {
+        die 'get did not return a file';
+      }
+      
+    };
+
+  };
+
+};
