@@ -3,6 +3,7 @@ sudo: false
 
 install:
   - perlbrew list
+  - cpanm -n Alien::Build::Plugin::Decode::SourceForge
   - dzil authordeps --missing | cpanm -n
   - dzil listdeps --missing | cpanm -n || true
 
