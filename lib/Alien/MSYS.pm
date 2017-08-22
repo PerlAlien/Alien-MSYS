@@ -135,6 +135,8 @@ This function returns the full path to the MSYS bin directory.
 
 =cut
 
+our $location_method = '-';
+
 sub msys_path ()
 {
   return undef unless  $^O eq 'MSWin32';
@@ -143,13 +145,17 @@ sub msys_path ()
   
   if($override_type ne 'share')
   {
-    return $ENV{PERL_ALIEN_MSYS_BIN}
-      if defined $ENV{PERL_ALIEN_MSYS_BIN} && -x File::Spec->catfile($ENV{PERL_ALIEN_MSYS_BIN}, 'sh.exe');
+    if(defined $ENV{PERL_ALIEN_MSYS_BIN} && -x File::Spec->catfile($ENV{PERL_ALIEN_MSYS_BIN}, 'sh.exe'))
+    {
+      $location_method = 'PERL_ALIEN_MSYS_BIN';
+      return $ENV{PERL_ALIEN_MSYS_BIN}
+    }
 
     if(my $uname_exe = which('uname'))
     {
       my $uname = `$uname_exe`;
       if($uname =~ /^(MSYS|MINGW(32|64))_NT/) {
+        $location_method = 'found msys2';
         return dirname($uname_exe);
       }
     }
@@ -165,12 +171,20 @@ sub msys_path ()
         die 'no sh.exe' unless -x File::Spec->catfile($path, 'sh.exe');
         $path;
       };
-      return $path unless $@;
+      unless($@)
+      {
+        $location_method = 'relative to mingw-get.exe';
+        return $path;
+      }
     }
 
     foreach my $dir (qw( C:\MinGW\msys\1.0\bin ))
     {
-      return $dir if -x File::Spec->catfile($dir, 'sh.exe');
+      if(-x File::Spec->catfile($dir, 'sh.exe'))
+      {
+        $location_method = 'default install location';
+        return $dir;
+      }
     }
 
     my $path = eval {
@@ -189,13 +203,21 @@ sub msys_path ()
       $path;
     };
 
-    return $path unless $@;
+    unless($@)
+    {
+      $location_method = 'desktop shortcut';
+      return $path;
+    }
   }
 
   if($override_type ne 'system')
   {
     my $dir = _my_dist_dir();
-    return $dir if defined $dir && -d $dir;
+    if($dir && -d $dir)
+    {
+      $location_method = 'default install location';
+      return $dir if defined $dir && -d $dir;
+    }
   }
 
   return undef;

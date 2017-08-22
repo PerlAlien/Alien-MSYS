@@ -14,13 +14,18 @@ $modules{$_} = $_ for qw(
   Alien::Build::MM
   Alien::Build::Plugin::Decode::SourceForge
   ExtUtils::MakeMaker
+  File::Which
   Path::Tiny
   Test2::V0
   Test::Alien::Build
   Win32::Shortcut
 );
 
-
+$post_diag = sub {
+  use Alien::MSYS;
+  diag 'locaton ', (Alien::MSYS::msys_path()||'-');
+  diag 'method  ', $Alien::MSYS::location_method;
+};
 
 my @modules = sort keys %modules;
 

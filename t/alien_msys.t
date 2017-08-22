@@ -3,6 +3,8 @@ use Test::Alien::Build;
 use Alien::MSYS;
 use Path::Tiny ();
 
+$Alien::MSYS::VERSION ||= '0.10';
+
 subtest 'basic' => sub {
 
   my $build = alienfile_ok q{
