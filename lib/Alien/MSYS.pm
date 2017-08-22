@@ -154,12 +154,9 @@ sub msys_path ()
       }
     }
 
-    require File::Spec;
-    foreach my $dir (split /;/, $ENV{PATH})
+    if(my $mingw_get = which('mingw-get.exe'))
     {
       my $path = eval {
-        my $mingw_get = File::Spec->catfile($dir, 'mingw-get.exe');
-        die 'no mingw-get.exe' unless -x $mingw_get;
         my($volume, $dirs) = File::Spec->splitpath($mingw_get);
         my @dirs = File::Spec->splitdir($dirs);
         splice @dirs, -2;
