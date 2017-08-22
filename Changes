@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Use MSYS2 if found, instead of downloading MSYS
 
 0.10_01   2017-08-18 17:46:48 -0400
   - Use Alien::Build + alienfile for build
