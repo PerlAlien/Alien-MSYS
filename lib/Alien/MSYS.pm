@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use base qw( Exporter );
 use File::Spec;
+use File::Which qw( which );
+use File::Basename qw( dirname );
 
 our @EXPORT    = qw( msys msys_run );
 our @EXPORT_OK = qw( msys msys_run msys_path );
@@ -143,7 +145,15 @@ sub msys_path ()
   {
     return $ENV{PERL_ALIEN_MSYS_BIN}
       if defined $ENV{PERL_ALIEN_MSYS_BIN} && -x File::Spec->catfile($ENV{PERL_ALIEN_MSYS_BIN}, 'sh.exe');
-  
+
+    if(my $uname_exe = which('uname'))
+    {
+      my $uname = `$uname_exe`;
+      if($uname =~ /^(MSYS|MINGW(32|64))_NT/) {
+        return dirname($uname_exe);
+      }
+    }
+
     require File::Spec;
     foreach my $dir (split /;/, $ENV{PATH})
     {
