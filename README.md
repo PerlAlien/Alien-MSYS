@@ -57,7 +57,7 @@ methods in this order:
     [Win32::Shortcut](https://metacpan.org/pod/Win32::Shortcut) installed, as it is an optional dependency.
 
 If `MSYS` cannot be found using any of these methods, then it will download and install
-`MSYS` in this distribution's share directory (via [File::ShareDir](https://metacpan.org/pod/File::ShareDir)).
+`MSYS` in this distribution's share directory.
 
 # FUNCTIONS
 

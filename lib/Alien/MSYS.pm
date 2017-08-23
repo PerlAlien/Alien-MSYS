@@ -72,7 +72,7 @@ L<Win32::Shortcut> installed, as it is an optional dependency.
 =back
 
 If C<MSYS> cannot be found using any of these methods, then it will download and install
-C<MSYS> in this distribution's share directory (via L<File::ShareDir>).
+C<MSYS> in this distribution's share directory.
 
 =head1 FUNCTIONS
 
