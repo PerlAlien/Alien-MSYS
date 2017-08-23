@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.10_02   2017-08-23 14:11:48 -0400
   - Use MSYS2 if found, instead of downloading MSYS
 
 0.10_01   2017-08-18 17:46:48 -0400
