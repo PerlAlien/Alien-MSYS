@@ -3,7 +3,7 @@ sudo: false
 
 install:
   - perlbrew list
-  - cpanm -n App::af
+  - ./maint/travis-install-mods
   - af missing --plugins | cpanm -n
   - af missing | cpanm -n
   - dzil authordeps --missing | cpanm -n
