@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.10_03   2019-12-11 16:11:24 -0700
   - Prefer curl to HTTP::Tiny when Net::SSLeay and IO::Socket::SSL
     are not installed.
   - Fix tests to not rely on `touch` which is frequently not available
