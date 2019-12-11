@@ -1,6 +1,10 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Prefer curl to HTTP::Tiny when Net::SSLeay and IO::Socket::SSL
+    are not installed.
+  - Fix tests to not rely on `touch` which is frequently not available
+    on Windows.
 
 0.10_02   2017-08-23 14:11:48 -0400
   - Use MSYS2 if found, instead of downloading MSYS

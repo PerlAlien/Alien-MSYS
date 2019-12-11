@@ -26,7 +26,7 @@ subtest 'basic' => sub {
       download sub { path('file1')->touch };
       extract  sub { path('file2')->touch };
       build    [
-        'touch file3',
+        sub { Path::Tiny->new('file3')->touch },
         'mv file3 %{.install.stage}/file3',
         [ 'sh', $config_guess, \'%{.runtime.config_guess}' ],
       ];
