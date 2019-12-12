@@ -1,6 +1,5 @@
 use Test2::V0 -no_srand => 1;
 use Test::Alien::Build;
-use Alien::MSYS;
 use Path::Tiny ();
 
 $Alien::MSYS::VERSION ||= '0.10';
@@ -26,7 +25,7 @@ subtest 'basic' => sub {
       download sub { path('file1')->touch };
       extract  sub { path('file2')->touch };
       build    [
-        sub { Path::Tiny->new('file3')->touch },
+        'touch file3',
         'mv file3 %{.install.stage}/file3',
         [ 'sh', $config_guess, \'%{.runtime.config_guess}' ],
       ];
