@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.10_04   2019-12-15 07:02:23 -0700
   - Bump EUMM requirements
 
 0.10_03   2019-12-11 16:11:24 -0700
