@@ -1,4 +1,4 @@
-# Alien::MSYS [![Build Status](https://secure.travis-ci.org/plicease/Alien-MSYS.png)](http://travis-ci.org/plicease/Alien-MSYS)
+# Alien::MSYS [![Build Status](https://secure.travis-ci.org/Perl5-Alien/Alien-MSYS.png)](http://travis-ci.org/Perl5-Alien/Alien-MSYS)
 
 Tools required for GNU style configure scripts on Windows
 
