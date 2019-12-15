@@ -14,6 +14,7 @@ $modules{$_} = $_ for qw(
   Alien::Build::MM
   Alien::Build::Plugin::Decode::SourceForge
   ExtUtils::MakeMaker
+  File::Glob
   File::Which
   Path::Tiny
   Test2::V0

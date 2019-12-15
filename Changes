@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Remove mingw-get cache, man pages and documentation which saves
+    about 35MB (1/3 of the total) on a share install.
 
 0.10_04   2019-12-15 07:02:23 -0700
   - Bump EUMM requirements
