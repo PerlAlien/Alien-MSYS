@@ -1,6 +1,9 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - All detecton logic has been moved from Alien/MSYS.pm into
+    the alienfile.  This is how most Alien::Build Aliens work,
+    so it makes more sense.
   - Remove mingw-get cache, man pages and documentation which saves
     about 35MB (1/3 of the total) on a share install.
 
