@@ -142,6 +142,8 @@ sub msys_path ()
 {
   my $class = 'Alien::MSYS';
 
+  return if $^O eq 'MSWin32';
+
   if($class->install_type('share'))
   {
     return Path::Tiny->new($class->dist_dir)->child('msys/1.0/bin')->canonpath;
