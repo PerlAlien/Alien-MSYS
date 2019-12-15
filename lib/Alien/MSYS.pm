@@ -2,10 +2,9 @@ package Alien::MSYS;
 
 use strict;
 use warnings;
-use base qw( Exporter );
-use File::Spec;
-use File::Which qw( which );
-use File::Basename qw( dirname );
+use Path::Tiny ();
+use Env qw( @PATH );
+use base qw( Alien::Base Exporter );
 
 our @EXPORT    = qw( msys msys_run );
 our @EXPORT_OK = qw( msys msys_run msys_path );
@@ -93,7 +92,11 @@ use MSYS instead of the default environment.
 
 sub msys (&)
 {
-  local $ENV{PATH} = $^O eq 'MSWin32' ? msys_path().";$ENV{PATH}" : $ENV{PATH};
+  local $ENV{PATH} = $ENV{PATH};
+  if($^O eq 'MSWin32')
+  {
+    unshift @PATH, msys_path();
+  }
   $_[0]->();
 }
 
@@ -135,112 +138,18 @@ This function returns the full path to the MSYS bin directory.
 
 =cut
 
-our $location_method = '-';
-
 sub msys_path ()
 {
-  return undef unless  $^O eq 'MSWin32';
+  my $class = 'Alien::MSYS';
 
-  my $override_type = $ENV{ALIEN_MSYS_INSTALL_TYPE} || $ENV{ALIEN_INSTALL_TYPE} || '';
-
-  if($override_type ne 'share')
+  if($class->install_type('share'))
   {
-    if(defined $ENV{PERL_ALIEN_MSYS_BIN} && -x File::Spec->catfile($ENV{PERL_ALIEN_MSYS_BIN}, 'sh.exe'))
-    {
-      $location_method = 'PERL_ALIEN_MSYS_BIN';
-      return $ENV{PERL_ALIEN_MSYS_BIN}
-    }
-
-    if(my $uname_exe = which('uname'))
-    {
-      my $uname = `$uname_exe`;
-      if($uname =~ /^(MSYS|MINGW(32|64))_NT/) {
-        $location_method = 'found msys2';
-        return dirname($uname_exe);
-      }
-    }
-
-    if(my $mingw_get = which('mingw-get.exe'))
-    {
-      my $path = eval {
-        my($volume, $dirs) = File::Spec->splitpath($mingw_get);
-        my @dirs = File::Spec->splitdir($dirs);
-        splice @dirs, -2;
-        push @dirs, qw( msys 1.0 bin );
-        my $path = File::Spec->catdir($volume, @dirs);
-        die 'no sh.exe' unless -x File::Spec->catfile($path, 'sh.exe');
-        $path;
-      };
-      unless($@)
-      {
-        $location_method = 'relative to mingw-get.exe';
-        return $path;
-      }
-    }
-
-    foreach my $dir (qw( C:\MinGW\msys\1.0\bin ))
-    {
-      if(-x File::Spec->catfile($dir, 'sh.exe'))
-      {
-        $location_method = 'default install location';
-        return $dir;
-      }
-    }
-
-    my $path = eval {
-      require Win32;
-      require Win32::Shortcut;
-      my $lnk_name = File::Spec->catfile(Win32::GetFolderPath(Win32::CSIDL_DESKTOP(), 1), 'MinGW Installer.lnk');
-      die "No MinGW Installer.lnk" unless -r $lnk_name;
-      my $lnk      = Win32::Shortcut->new;
-      $lnk->Load($lnk_name);
-      my($volume, $dirs) = File::Spec->splitpath($lnk->{Path});
-      my @dirs = File::Spec->splitdir($dirs);
-      splice @dirs, -3;
-      push @dirs, qw( msys 1.0 bin );
-      my $path = File::Spec->catdir($volume, @dirs);
-      die 'no sh.exe' unless -x File::Spec->catfile($path, 'sh.exe');
-      $path;
-    };
-
-    unless($@)
-    {
-      $location_method = 'desktop shortcut';
-      return $path;
-    }
+    return Path::Tiny->new($class->dist_dir)->child('msys/1.0/bin')->canonpath;
   }
-
-  if($override_type ne 'system')
+  else
   {
-    my $dir = _my_dist_dir();
-    if($dir && -d $dir)
-    {
-      $location_method = 'default install location';
-      return $dir if defined $dir && -d $dir;
-    }
+    return Path::Tiny->new($class->runtime_prop->{my_bin})->canonpath;
   }
-
-  return undef;
-}
-
-sub _my_dist_dir
-{
-  #eval { File::Spec->catdir(dist_dir('Alien-MSYS'), qw( msys 1.0 bin )) };
-  my @pm = ('Alien', 'MSYS.pm');
-  foreach my $inc (@INC)
-  {
-    my $pm = File::Spec->catfile($inc, @pm);
-    if(-f $pm)
-    {
-      my $share = File::Spec->catdir($inc, qw( auto share dist ), 'Alien-MSYS' );
-      if(-d $share)
-      {
-        return File::Spec->catdir($share, qw( msys 1.0 bin) );
-      }
-      last;
-    }
-  }
-  return;
 }
 
 1;

@@ -1,6 +1,7 @@
 use alienfile;
 use Path::Tiny qw( path );
 use File::Glob qw( bsd_glob );
+use File::Which qw( which );
 
 configure {
   requires 'Alien::Build' => '0.99';
@@ -8,34 +9,83 @@ configure {
   requires 'File::Glob' => 0;
 };
 
+sub msys_is_okay
+{
+  my($dir) = @_;
+     -d path($dir)
+  && -x path($dir)->child('sh.exe')
+  && -x path($dir)->child('m4.exe')
+  && -x path($dir)->child('perl.exe')
+}
+
 probe sub {
+  my($build) = @_;
+
   if($^O eq 'MSWin32' || $ENV{PERL_ALIEN_MSYS_FAUX})
   {
     return 'share'
       if defined $ENV{ALIEN_MSYS_INSTALL_TYPE} && $ENV{ALIEN_MSYS_INSTALL_TYPE} eq 'share';
-  
-    if(-f 'lib/Alien/MSYS.pm')
+
+    if(defined $ENV{PERL_ALIEN_MSYS_BIN})
     {
-      eval { require './lib/Alien/MSYS.pm' };
-    }
-    else
-    {
-      eval { require Alien::MSYS };
-    }
-    if(my $error = $@)
-    {
-      log("error loading Alien::MSYS: $error");
-    }
-    else
-    {
-      do { no warnings 'redefine'; *Alien::MSYS::_my_dist_dir = sub {} };
-      if(defined Alien::MSYS::msys_path())
+      if(msys_is_okay($ENV{PERL_ALIEN_MSYS_BIN}))
       {
+        $build->runtime_prop->{my_type} = 'PERL_ALIEN_MSYS_BIN';
+        $build->runtime_prop->{my_bin} = path($ENV{PERL_ALIEN_MSYS_BIN})->stringify;
         return 'system';
       }
     }
-    die "requested a system install, but could not be found!"
-      if defined $ENV{ALIEN_MSYS_INSTALL_TYPE} && $ENV{ALIEN_MSYS_INSTALL_TYPE} eq 'system';
+
+    if(my $uname_exe = which('uname'))
+    {
+      my $bin_dir = path($uname_exe)->parent->stringify;
+      my $uname = `$uname_exe`;
+      if($uname =~ /^(MSYS|MINGW(32|64))_NT/ && msys_is_okay($bin_dir)) {
+        $build->runtime_prop->{my_type} =  'found uname in PATH';
+        $build->runtime_prop->{my_bin} = $bin_dir;
+        return 'system';
+      }
+    }
+
+    if(my $mingw_get = which('mingw-get.exe'))
+    {
+      my $bin_dir = path($mingw_get)->parent->parent->child('msys/1.0/bin')->stringify;
+      if(msys_is_okay($bin_dir))
+      {
+        $build->runtime_prop->{my_type} =  'relative to mingw-get.exe';
+        $build->runtime_prop->{my_bin} = $bin_dir;
+        return 'system';
+      }
+    }
+
+    foreach my $maybe (qw( C:\MinGW\msys\1.0\bin ))
+    {
+      my $bin_dir = path($maybe)->stringify;
+      if(msys_is_okay($bin_dir))
+      {
+        $build->runtime_prop->{my_type} =  'default install location';
+        $build->runtime_prop->{my_bin} = $bin_dir;
+        return 'system';
+      }
+    }
+
+    my $path = eval {
+      require Win32;
+      require Win32::Shortcut;
+      my $lnk_name = path(Win32::GetFolderPath(Win32::CSIDL_DESKTOP(), 1))->child('MinGW Installer.lnk')->canonpath;
+      die "No MinGW Installer.lnk" unless -r $lnk_name;
+      my $lnk = Win32::Shortcut->new;
+      $lnk->Load($lnk_name);
+      my $mingw_get = path($lnk->{Path});
+      my $bin_dir = path($mingw_get)->parent->child('msys/1.0/bin');
+      if(msys_is_okay($bin_dir))
+      {
+        $build->runtime_prop->{my_type} =  'MinGW Installer shortcut';
+        $build->runtime_prop->{my_bin} = $bin_dir;
+        return 'system';
+      }
+    };
+
     return 'share';
   }
   else
@@ -57,34 +107,34 @@ share {
     my($build) = @_;
 
     $build->log("GET @{[ meta->prop->{start_url} ]}");
-    
+
     my $mingw_get_index_url = do {
       my $ret = $build->decode($build->fetch);
       my($first) = grep { $_->{filename} =~ /mingw-get-.*?-([0-9]{8})-([0-9]+)/ } @{ $ret->{list} };
       die 'unable to find the correct directory for mingw-get' unless $first;
       $first->{url};
     };
-    
+
     $build->log("GET $mingw_get_index_url");
-    
+
     my $mingw_get_url = do {
       my $ret = $build->decode($build->fetch($mingw_get_index_url));
       my($first) = grep { $_->{filename} =~ /mingw-get-.*?-bin.zip/ } @{ $ret->{list} };
       $first->{url};
     };
-    
+
     $build->log("GET $mingw_get_url");
-    
+
     {
       my $ret = $build->fetch($mingw_get_url);
-      
+
       if(defined $ret->{content})
       {
-        Path::Tiny->new($ret->{filename})->spew_raw($ret->{content});
+        path($ret->{filename})->spew_raw($ret->{content});
       }
       elsif(defined $ret->{path})
       {
-        my $from = Path::Tiny->new($ret->{path});
+        my $from = path($ret->{path});
         my $to   = $ret->{filename};
         if($ret->{tmp})
         {
@@ -99,7 +149,7 @@ share {
       {
         die 'get did not return a file';
       }
-      
+
     };
 
   };
@@ -107,12 +157,12 @@ share {
   meta->around_hook(
     build => sub {
       my $orig = shift;
-    
+
       use Env qw( @PATH );
       local $ENV{PATH} = $ENV{PATH};
-      unshift @PATH, Path::Tiny->new('./bin')->absolute->stringify;
+      unshift @PATH, path('./bin')->absolute->stringify;
 
-      foreach my $dll (grep { $_->basename =~ /\.dll$/ } Path::Tiny->new('libexec/mingw-get')->children)
+      foreach my $dll (grep { $_->basename =~ /\.dll$/ } path('libexec/mingw-get')->children)
       {
         eval { chmod 0755, $dll };
       }
@@ -140,7 +190,7 @@ share {
       }
       elsif($^O eq 'MSWin32')
       {
-        my $stage = File::Spec->catdir($build->install_prop->{stage});
+        my $stage = path($build->install_prop->{stage})->canonpath;
         $build->system("xcopy . $stage /E");
       }
       else
@@ -149,5 +199,10 @@ share {
       }
     },
   ];
+
+  gather sub {
+    my($build) = @_;
+    $build->runtime_prop->{my_type} =  'share';
+  };
 
 };

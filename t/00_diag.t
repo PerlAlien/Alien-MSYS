@@ -10,12 +10,13 @@ my %modules;
 my $post_diag;
 
 $modules{$_} = $_ for qw(
+  Alien::Base
   Alien::Build
   Alien::Build::MM
   Alien::Build::Plugin::Decode::SourceForge
+  Env
   ExtUtils::MakeMaker
   File::Glob
-  File::Which
   Path::Tiny
   Test2::V0
   Test::Alien::Build
@@ -25,7 +26,7 @@ $modules{$_} = $_ for qw(
 $post_diag = sub {
   use Alien::MSYS;
   diag 'locaton ', (Alien::MSYS::msys_path()||'-');
-  diag 'method  ', $Alien::MSYS::location_method;
+  diag 'method  ', Alien::MSYS->runtime_prop->{my_type};
 };
 
 my @modules = sort keys %modules;
