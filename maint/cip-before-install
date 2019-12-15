@@ -1,0 +1,3 @@
+#!/bin/sh
+
+cip sudo cpanm -v Alien::Build::Plugin::Decode::SourceForge
