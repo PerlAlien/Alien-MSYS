@@ -5,10 +5,10 @@ environment:
     matrix:
       - install_perl: "%install_berry_perl%"
         version: "5.26.3_64"
-        ALIEN_INSTALL_TYPE=share
+        ALIEN_INSTALL_TYPE: share
       - install_perl: "%install_berry_perl%"
         version: "5.26.3_64"
-        ALIEN_INSTALL_TYPE=system
+        ALIEN_INSTALL_TYPE: system
 
 install:
   # Install perl
