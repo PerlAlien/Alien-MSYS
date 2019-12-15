@@ -1,4 +1,4 @@
-# Alien::MSYS [![Build Status](https://secure.travis-ci.org/Perl5-Alien/Alien-MSYS.png)](http://travis-ci.org/Perl5-Alien/Alien-MSYS)
+# Alien::MSYS [![Build Status](https://secure.travis-ci.org/Perl5-Alien/Alien-MSYS.png)](http://travis-ci.org/Perl5-Alien/Alien-MSYS) [![Build status](https://ci.appveyor.com/api/projects/status/ubww1yhg385rjyo1/branch/master?svg=true)](https://ci.appveyor.com/project/plicease/Alien-MSYS/branch/master)
 
 Tools required for GNU style configure scripts on Windows
 
@@ -42,19 +42,19 @@ methods in this order:
 
 - search `PATH` for `mingw-get.exe`
 
-    Second, [Alien::MSYS](https://metacpan.org/pod/Alien%3A%3AMSYS) searches the `PATH` environment variable for the `mingw-get.exe`
+    Second, [Alien::MSYS](https://metacpan.org/pod/Alien::MSYS) searches the `PATH` environment variable for the `mingw-get.exe`
     program, which is a common method for installing `MinGW` and `MSYS`.  From there
     if it can deduce the location of `MSYS` it will use that.
 
 - try `C:\MinGW\msys\1.0\bin`
 
-    Next, [Alien::MSYS](https://metacpan.org/pod/Alien%3A%3AMSYS) tries the default install location.
+    Next, [Alien::MSYS](https://metacpan.org/pod/Alien::MSYS) tries the default install location.
 
 - Use desktop shortcut for `MinGW Installer`
 
-    Finally, [Alien::MSYS](https://metacpan.org/pod/Alien%3A%3AMSYS) will try to find `MSYS` from the desktop shortcut created
+    Finally, [Alien::MSYS](https://metacpan.org/pod/Alien::MSYS) will try to find `MSYS` from the desktop shortcut created
     by the GUI installer for `MinGW`.  This method only works if you already have
-    [Win32::Shortcut](https://metacpan.org/pod/Win32%3A%3AShortcut) installed, as it is an optional dependency.
+    [Win32::Shortcut](https://metacpan.org/pod/Win32::Shortcut) installed, as it is an optional dependency.
 
 If `MSYS` cannot be found using any of these methods, then it will download and install
 `MSYS` in this distribution's share directory.
@@ -86,7 +86,7 @@ This function runs a command with the MSYS environment.  It gets the command and
 either as passed to it, or if none are passed the the command is expected to be in
 @ARGV.
 
-If the command fails then it will [exit](https://metacpan.org/pod/perlfunc%23exit) with a non-zero error code.  This
+If the command fails then it will [exit](https://metacpan.org/pod/perlfunc#exit) with a non-zero error code.  This
 is useful, in the second example above if either `make` or `make install` fails, then
 the whole command will fail, also `make install` will not be attempted unless `make`
 succeeds.
@@ -104,8 +104,8 @@ can do to avoid this painful cost:
 
 - Use the system library if possible
 
-    The [Alien::Build](https://metacpan.org/pod/Alien%3A%3ABuild) system is usually smart enough to find the system library
-    if it is available.  [Alien::MSYS](https://metacpan.org/pod/Alien%3A%3AMSYS) is usually only necessary for so called
+    The [Alien::Build](https://metacpan.org/pod/Alien::Build) system is usually smart enough to find the system library
+    if it is available.  [Alien::MSYS](https://metacpan.org/pod/Alien::MSYS) is usually only necessary for so called
     `share` installs.
 
 - Pre-install MSYS
@@ -118,10 +118,10 @@ can do to avoid this painful cost:
 
     Some projects will provide a makefile that will work with GNU Make and `cmd.exe`
     that you can build without MSYS.  An example of an Alien that takes advantage of
-    this is [Alien::libuv](https://metacpan.org/pod/Alien%3A%3Alibuv).
+    this is [Alien::libuv](https://metacpan.org/pod/Alien::libuv).
 
     Some projects provide both autoconf and CMake.  Although using CMake reliably
-    requires [Alien::cmake3](https://metacpan.org/pod/Alien%3A%3Acmake3) for `share` installs, it is much much lighter than [Alien::MSYS](https://metacpan.org/pod/Alien%3A%3AMSYS).
+    requires [Alien::cmake3](https://metacpan.org/pod/Alien::cmake3) for `share` installs, it is much much lighter than [Alien::MSYS](https://metacpan.org/pod/Alien::MSYS).
 
     Also obviously you can open a ticket, or make a pull request with the project that you
     are alienizing to support build systems that don't suck as much as autoconf.
