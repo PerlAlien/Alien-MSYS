@@ -17,6 +17,7 @@ $modules{$_} = $_ for qw(
   Env
   ExtUtils::MakeMaker
   File::Glob
+  File::chdir
   Path::Tiny
   Test2::V0
   Test::Alien::Build
