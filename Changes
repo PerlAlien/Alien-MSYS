@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.10_05   2019-12-15 18:55:16 -0700
   - All detecton logic has been moved from Alien/MSYS.pm into
     the alienfile.  This is how most Alien::Build Aliens work,
     so it makes more sense.
