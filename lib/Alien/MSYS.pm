@@ -142,7 +142,7 @@ sub msys_path ()
 {
   my $class = 'Alien::MSYS';
 
-  return if $^O eq 'MSWin32';
+  return if $^O ne 'MSWin32';
 
   if($class->install_type('share'))
   {
