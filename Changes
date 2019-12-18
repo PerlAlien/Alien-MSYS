@@ -2,6 +2,9 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.10_07   2019-12-17 19:29:34 -0700
+  - Additional diagnostics
+
 0.10_06   2019-12-16 17:07:33 -0700
   - Additional diagnostics
 
