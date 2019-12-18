@@ -178,11 +178,25 @@ share {
     sub {
       my($build) = @_;
 
+      $build->log("checking for sh, perl and m4...");
+
+      foreach my $exe (map { "msys/1.0/bin/$_" } qw( sh.exe perl.exe m4.exe ))
+      {
+        unless(-f $exe)
+        {
+          die "not found: $exe";
+        }
+      }
+
+      $build->log("remove package cache, and man pages");
+
       # remove var/cache/mingw-get/packages/*
       unlink $_ for bsd_glob('var/cache/mingw-get/packages/*');
       # remove msys/1.0/share/{doc,man}
       eval { path('msys/1.0/share/doc')->remove_tree };
       eval { path('msys/1.0/share/man')->remove_tree };
+
+      $build->log("moving to @{[ $build->install_prop->{stage} ]}");
 
       if($^O eq 'cygwin')
       {
@@ -196,6 +210,16 @@ share {
       else
       {
         die "huh?";
+      }
+
+      $build->log("checking for sh, perl and m4...");
+
+      foreach my $exe (map { "@{[ $build->install_prop->{stage} ]}/msys/1.0/bin/$_" } qw( sh.exe perl.exe m4.exe ))
+      {
+        unless(-f $exe)
+        {
+          die "not found: $exe";
+        }
       }
     },
   ];
