@@ -6,13 +6,17 @@ Tools required for GNU style configure scripts on Windows
 
 from Perl:
 
-    use Alien::MSYS;
-    # runs uname from MSYS
-    my $uname = msys { `uname` };
+```perl
+use Alien::MSYS;
+# runs uname from MSYS
+my $uname = msys { `uname` };
+```
 
 From Prompt/Makefile
 
-    C:\> perl -MAlien::MSYS -e msys_run uname
+```
+C:\> perl -MAlien::MSYS -e msys_run uname
+```
 
 # DESCRIPTION
 
@@ -35,7 +39,9 @@ methods in this order:
     If set, this environment variable should be set to the root of `MSYS` (NOT `MinGW`).
     For example, if you have `MinGW` / `MSYS` installed on `D:` you might use this:
 
-        C:\> set PERL_ALIEN_MSYS_BIN=D:\MinGW\msys\1.0\bin
+    ```
+    C:\> set PERL_ALIEN_MSYS_BIN=D:\MinGW\msys\1.0\bin
+    ```
 
     Keep in mind that this environment variable is consulted during both install and at run-time,
     so it is advisable to set this in the System Properties control panel.
@@ -63,12 +69,14 @@ If `MSYS` cannot be found using any of these methods, then it will download and 
 
 ## msys
 
-    # get the uname from MSYS
-    my $uname = msys { `uanem` };
-    
-    # run with GNU make from MSYS instead of
-    # dmake from Strawberry Perl
-    msys { system 'make' };
+```perl
+# get the uname from MSYS
+my $uname = msys { `uanem` };
+
+# run with GNU make from MSYS instead of
+# dmake from Strawberry Perl
+msys { system 'make' };
+```
 
 This function takes a single argument, a code reference, and runs it with the correctly
 set environment so that calls to the system function or the qx quote like operator will
@@ -76,11 +84,13 @@ use MSYS instead of the default environment.
 
 ## msys\_run
 
-    # pass command through @ARGV
-    C:\> perl -MAlien::MSYS -e msys_run uname
-    
-    # pass command through @_
-    C:\> perl -MAlien::MSYS -e "msys_run 'make'; msys_run 'make install'"
+```perl
+# pass command through @ARGV
+C:\> perl -MAlien::MSYS -e msys_run uname
+
+# pass command through @_
+C:\> perl -MAlien::MSYS -e "msys_run 'make'; msys_run 'make install'"
+```
 
 This function runs a command with the MSYS environment.  It gets the command and arguments
 either as passed to it, or if none are passed the the command is expected to be in
