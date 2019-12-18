@@ -58,18 +58,28 @@ subtest 'basic' => sub {
     diag '';
     diag '';
 
+    if(-d $dist_dir)
+    {
+      local $CWD = $dist_dir;
+      diag "cd $CWD";
+      diag '+dir /s';
+      diag `dir /s`;
+    }
+    else
+    {
+      diag "!!! NO $dist_dir !!!";
+    }
+
+    if(-d $bin_dir)
     {
       local $CWD = $bin_dir;
       diag "cd $CWD";
       diag '+dir /s';
       diag `dir /s`;
     }
-
+    else
     {
-      local $CWD = $dist_dir;
-      diag "cd $CWD";
-      diag '+dir /s';
-      diag `dir /s`;
+      diag "!!! NO $bin_dir !!!";
     }
 
     Alien::MSYS::msys(sub {
