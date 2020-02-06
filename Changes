@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.12      2020-02-06 14:46:30 -0700
   - Require at least Windows 7.  Windows XP is known to have poor
     native crypto support, which is used my mingw-get and doesn't
     work with sourceforge.  I recommend that you upgrade to Windows
