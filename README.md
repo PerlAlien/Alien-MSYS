@@ -155,7 +155,11 @@ can do to avoid this painful cost:
 
 # AUTHOR
 
-Graham Ollis <plicease@cpan.org>
+Author: Graham Ollis <plicease@cpan.org>
+
+Contributors:
+
+Shawn Laffan (SLAFFAN, shawnlaffan)
 
 # COPYRIGHT AND LICENSE
 
