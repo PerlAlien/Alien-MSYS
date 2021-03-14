@@ -1,4 +1,4 @@
-# Alien::MSYS [![Build Status](https://travis-ci.org/PerlAlien/Alien-MSYS.svg)](http://travis-ci.org/PerlAlien/Alien-MSYS) [![Build status](https://ci.appveyor.com/api/projects/status/ubww1yhg385rjyo1/branch/master?svg=true)](https://ci.appveyor.com/project/plicease/Alien-MSYS/branch/master) ![windows-share](https://github.com/PerlAlien/Alien-MSYS/workflows/windows-share/badge.svg)
+# Alien::MSYS [![Build status](https://ci.appveyor.com/api/projects/status/ubww1yhg385rjyo1/branch/main?svg=true)](https://ci.appveyor.com/project/plicease/Alien-MSYS/branch/main) ![linux](https://github.com/PerlAlien/Alien-MSYS/workflows/linux/badge.svg) ![windows-share](https://github.com/PerlAlien/Alien-MSYS/workflows/windows-share/badge.svg)
 
 Tools required for GNU style configure scripts on Windows
 
