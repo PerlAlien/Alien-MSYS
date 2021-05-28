@@ -14,14 +14,16 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         cip:
           - tag: "static"
-          - tag: "5.33"
+          - tag: "5.35"
           - env: ALIEN_INSTALL_TYPE=share
-            tag: "5.32"
+            tag: "5.34"
           - env: ALIEN_INSTALL_TYPE=system
-            tag: "5.32"
+            tag: "5.34"
+          - tag: "5.32"
           - tag: "5.30"
           - tag: "5.28"
           - tag: "5.26"
@@ -79,3 +81,8 @@ jobs:
       - name: Build + Test
         run: |
           cip script
+
+      - name: CPAN log
+        if: ${{ failure() }}
+        run: |
+          cip exec bash -c 'cat $HOME/.cpanm/latest-build/build.log'
