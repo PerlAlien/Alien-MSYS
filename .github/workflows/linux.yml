@@ -18,11 +18,12 @@ jobs:
       matrix:
         cip:
           - tag: "static"
-          - tag: "5.35"
+          - tag: "5.37"
           - env: ALIEN_INSTALL_TYPE=share
-            tag: "5.34"
+            tag: "5.36"
           - env: ALIEN_INSTALL_TYPE=system
-            tag: "5.34"
+            tag: "5.36"
+          - tag: "5.34"
           - tag: "5.32"
           - tag: "5.30"
           - tag: "5.28"
