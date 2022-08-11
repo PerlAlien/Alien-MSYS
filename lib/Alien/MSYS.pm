@@ -22,7 +22,7 @@ from Perl:
 
 From Prompt/Makefile
 
- C:\> perl -MAlien::MSYS -e msys_run uname
+ C:\> perl -MAlien::MSYS -e Alien::MSYS::msys_run uname
 
 =head1 DESCRIPTION
 
@@ -103,10 +103,10 @@ sub msys (&)
 =head2 msys_run
 
  # pass command through @ARGV
- C:\> perl -MAlien::MSYS -e msys_run uname
+ C:\> perl -MAlien::MSYS -e Alien::MSYS::msys_run uname
  
  # pass command through @_
- C:\> perl -MAlien::MSYS -e "msys_run 'make'; msys_run 'make install'"
+ C:\> perl -MAlien::MSYS -e "Alien::MSYS::msys_run 'make'; Alien::MSYS::msys_run 'make install'"
 
 This function runs a command with the MSYS environment.  It gets the command and arguments
 either as passed to it, or if none are passed the the command is expected to be in
