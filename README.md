@@ -15,7 +15,7 @@ my $uname = msys { `uname` };
 From Prompt/Makefile
 
 ```
-C:\> perl -MAlien::MSYS -e msys_run uname
+C:\> perl -MAlien::MSYS -e Alien::MSYS::msys_run uname
 ```
 
 # DESCRIPTION
@@ -86,10 +86,10 @@ use MSYS instead of the default environment.
 
 ```perl
 # pass command through @ARGV
-C:\> perl -MAlien::MSYS -e msys_run uname
+C:\> perl -MAlien::MSYS -e Alien::MSYS::msys_run uname
 
 # pass command through @_
-C:\> perl -MAlien::MSYS -e "msys_run 'make'; msys_run 'make install'"
+C:\> perl -MAlien::MSYS -e "Alien::MSYS::msys_run 'make'; Alien::MSYS::msys_run 'make install'"
 ```
 
 This function runs a command with the MSYS environment.  It gets the command and arguments
@@ -163,7 +163,7 @@ Shawn Laffan (SLAFFAN, shawnlaffan)
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Graham Ollis.
+This software is copyright (c) 2013-2022 by Graham Ollis.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
