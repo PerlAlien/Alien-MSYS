@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.16      2022-09-22 06:29:15 -0600
   - Documentation fixes and improvements (gh#19)
   - Update tests to work with ALIEN_DOWNLOAD_RULE restrictions (gh#20)
 
