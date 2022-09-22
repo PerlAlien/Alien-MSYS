@@ -78,7 +78,7 @@ C<MSYS> in this distribution's share directory.
 =head2 msys
 
  # get the uname from MSYS
- my $uname = msys { `uanem` };
+ my $uname = msys { `uname` };
  
  # run with GNU make from MSYS instead of
  # dmake from Strawberry Perl
