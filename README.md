@@ -71,7 +71,7 @@ If `MSYS` cannot be found using any of these methods, then it will download and 
 
 ```perl
 # get the uname from MSYS
-my $uname = msys { `uname` };
+my $uname = msys { `uanem` };
 
 # run with GNU make from MSYS instead of
 # dmake from Strawberry Perl
@@ -160,6 +160,8 @@ Author: Graham Ollis <plicease@cpan.org>
 Contributors:
 
 Shawn Laffan (SLAFFAN, shawnlaffan)
+
+bekuno
 
 # COPYRIGHT AND LICENSE
 
