@@ -38,7 +38,7 @@ configure {
   requires 'File::Glob' => 0;
 };
 
-my @exes_to_check = qw( sh.exe perl.exe m4.exe );
+my @exes_to_check = qw( sh.exe perl.exe m4.exe mktemp.exe readlink.exe );
 sub msys_is_okay
 {
   my($dir) = @_;
@@ -205,6 +205,8 @@ share {
     'mingw-get install msys',                # sh.exe, etc.
     'mingw-get install msys-m4',             # m4.exe
     'mingw-get install msys-perl',           # perl.exe
+    'mingw-get install msys-coreutils-ext',  # readlink.exe, etc.
+    'mingw-get install msys-mktemp',         # mktemp.exe
     sub {
       my($build) = @_;
 
