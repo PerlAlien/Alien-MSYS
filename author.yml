@@ -15,6 +15,9 @@ pod_spelling_system:
     - SLAFFAN
     - shawnlaffan
     - bekuno
+    - Mughal
+    - Zaki
+    - zmughal
 
 pod_coverage:
   # format is "Class#method" or "Class", regex allowed

@@ -2,6 +2,8 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
   - Documentation fixes and improvements (gh#21)
+  - Added msys-coreutils-ext and msys-mktemp as these are commonly
+    needed tools (gh#23 zmughal++)
 
 0.16      2022-09-22 06:29:15 -0600
   - Documentation fixes and improvements (gh#19)

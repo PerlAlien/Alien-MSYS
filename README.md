@@ -163,6 +163,8 @@ Shawn Laffan (SLAFFAN, shawnlaffan)
 
 bekuno
 
+Zaki Mughal (zmughal)
+
 # COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2013-2022 by Graham Ollis.
