@@ -1,3 +1,5 @@
 /Alien-MSYS-*
 /.build
 *.swp
+*.old
+*.orig
